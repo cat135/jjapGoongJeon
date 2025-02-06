@@ -5,9 +5,33 @@ using UnityEngine.AI;
 
 public class SpawningPool : MonoBehaviour
 {
+    private static SpawningPool s_instance;
+
+    public static SpawningPool Spawning
+    {
+        get
+        {
+            if (s_instance != null) return s_instance;
+
+            var go = GameObject.Find("@SpawningPool");
+            if (go == null)
+            {
+                go = new GameObject { name = "@SpawningPool" };
+                go.transform.position = Vector3.zero;
+                go.AddComponent<SpawningPool>();
+            }
+
+            s_instance = go.GetComponent<SpawningPool>();
+
+            return s_instance;
+        }
+    }
+    
     [SerializeField]
     int _monsterCount = 0;
     int _reserveCount = 0;
+
+    public int MonsterCount => _monsterCount;
 
     [SerializeField]
     int _keepMonsterCount = 0;
@@ -15,10 +39,10 @@ public class SpawningPool : MonoBehaviour
     [SerializeField]
     Vector3 _spawnPos;
     [SerializeField]
-    float _spawnRadius = 15.0f;
+    float _spawnRadius = 8.0f;
     [SerializeField]
     float _spawnTime = 5.0f;
-
+    
     public void AddMonsterCount(int value) { _monsterCount += value; }
     public void SetKeepMonsterCount(int count) { _keepMonsterCount = count; }
 
@@ -40,23 +64,25 @@ public class SpawningPool : MonoBehaviour
     {
         _reserveCount++;
         yield return new WaitForSeconds(Random.Range(0, _spawnTime));
-        GameObject obj = Managers.Game.Spawn(Define.WorldObject.Monster, "Knight");
-        NavMeshAgent nma = obj.GetOrAddComponent<NavMeshAgent>();
-
-        Vector3 randPos;
-        while (true)
+        int temp = Random.Range(0, 3);
+        GameObject obj = null;
+        switch (temp)
         {
-            Vector3 randDir = Random.insideUnitSphere * Random.Range(0, _spawnRadius);
-			randDir.y = 0;
-			randPos = _spawnPos + randDir;
-
-            // 갈 수 있나
-            NavMeshPath path = new NavMeshPath();
-            if (nma.CalculatePath(randPos, path))
+            case 0:
+                obj = Managers.Game.Spawn(Define.WorldObject.Monster, "BlueKnight");
                 break;
-		}
+            case 1:
+                obj = Managers.Game.Spawn(Define.WorldObject.Monster, "YellowKnight");
+                break;
+            case 2:
+                obj = Managers.Game.Spawn(Define.WorldObject.Monster, "RedKnight");
+                break;
+        }
+         
+        
+        Vector3 randPos = _spawnPos + Random.insideUnitSphere * Random.Range(0, _spawnRadius);
 
-        obj.transform.position = randPos;
+        if (obj != null) obj.transform.position = randPos;
         _reserveCount--;
     }
 }

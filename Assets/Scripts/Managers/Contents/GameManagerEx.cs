@@ -6,16 +6,17 @@ using UnityEngine;
 public class GameManagerEx
 {
     GameObject _player;
-    //Dictionary<int, GameObject> _players = new Dictionary<int, GameObject>();
     HashSet<GameObject> _monsters = new HashSet<GameObject>();
+
+    public HashSet<GameObject> ActiveMonsters => _monsters;
 
     public Action<int> OnSpawnEvent;
 
     public GameObject GetPlayer() { return _player; }
 
-    public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
+    public GameObject Spawn(Define.WorldObject type, string path)
     {
-        GameObject go = Managers.Resource.Instantiate(path, parent);
+        GameObject go = Managers.Resource.Instantiate(path);
 
         switch (type)
         {

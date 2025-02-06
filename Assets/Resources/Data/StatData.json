@@ -1,0 +1,19 @@
+{
+  "stats": [
+    {
+      "level": "1",
+      "attack": "20",
+      "totalExp": "0"
+    },
+    {
+      "level": "2",
+      "attack": "25",
+      "totalExp": "10"
+    },
+    {
+      "level": "3",
+      "attack": "30",
+      "totalExp": "20"
+    }
+  ]
+} 

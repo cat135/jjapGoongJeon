@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Define
 {
+
+    public enum MoveType
+    {
+        Wonder,
+        SlowStalk,
+        FastStalk,
+    }
+    
     public enum WorldObject
     {
         Unknown,
@@ -16,7 +24,6 @@ public class Define
 		Die,
 		Moving,
 		Idle,
-		Skill,
 	}
 
     public enum Layer

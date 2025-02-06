@@ -7,41 +7,55 @@ public class Stat : MonoBehaviour
     [SerializeField]
     protected int _level;
     [SerializeField]
-    protected int _hp;
+    protected float _hp;
     [SerializeField]
-    protected int _maxHp;
+    protected float _maxHp;
     [SerializeField]
-    protected int _attack;
-    [SerializeField]
-    protected int _defense;
+    protected float _attack;
     [SerializeField]
     protected float _moveSpeed;
+    [SerializeField]
+    protected float _shootInterval;
+    [SerializeField]
+    protected float _shootDelay;
 
     public int Level { get { return _level; } set { _level = value; } }
-    public int Hp { get { return _hp; } set { _hp = value; } }
-    public int MaxHp { get { return _maxHp; } set { _maxHp = value; } }
-    public int Attack { get { return _attack; } set { _attack = value; } }
-    public int Defense { get { return _defense; } set { _defense = value; } }
+    public float Hp { get { return _hp; } set { _hp = value; } }
+    public float MaxHp { get { return _maxHp; } set { _maxHp = value; } }
+    public float Attack { get { return _attack; } set { _attack = value; } }
     public float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
+    public float ShootInterval { get { return _shootInterval; } set { _shootInterval = value; } }
+    public float ShootDelay { get { return _shootDelay; } set { _shootDelay = value; } }
+
 
     private void Start()
     {
-        _level = 1;
         _hp = 100;
         _maxHp = 100;
         _attack = 10;
-        _defense = 5;
-        _moveSpeed = 5.0f;
+        _shootDelay = 0.5f;
+        _shootDelay = 0.8f;
     }
 
-    public virtual void OnAttacked(Stat attacker)
+    public virtual void OnAttacked(ActiveSkill activeSkill)
     {
-		int damage = Mathf.Max(0, attacker.Attack - Defense);
+		float damage = Mathf.Max(0, activeSkill.Damage);
 		Hp -= damage;
         if (Hp <= 0)
         {
             Hp = 0;
-            OnDead(attacker);
+            OnDead(activeSkill.shooter);
+        }   
+    }
+    
+    public virtual void OnAttacked(float Damage)
+    {
+        float damage = Mathf.Max(0, Damage);
+        Hp -= damage;
+        if (Hp <= 0)
+        {
+            Hp = 0;
+            OnDead(null);
         }   
     }
 
@@ -50,7 +64,7 @@ public class Stat : MonoBehaviour
 		PlayerStat playerStat = attacker as PlayerStat;
 		if (playerStat != null)
 		{
-            playerStat.Exp += 15;
+            playerStat.Exp += 2;
 		}
 
         Managers.Game.Despawn(gameObject);
